@@ -7,7 +7,7 @@ using UnityEngine;
 public class SimpleRandomWalkDungeonGen : AbstractDungeonGen {
 
     [SerializeField]
-    protected SimpleRandomWalkData randomWalkParams;
+    protected FloorConfig config;
     [HideInInspector]
     public bool isGeneratingLevel;
     [HideInInspector]
@@ -15,13 +15,13 @@ public class SimpleRandomWalkDungeonGen : AbstractDungeonGen {
     [HideInInspector]
 
     protected override void RunProceduralGen() {
-        HashSet<Vector2Int> floorPositions = RunRandomWalk(randomWalkParams, startPos);
+        HashSet<Vector2Int> floorPositions = RunRandomWalk(config, startPos);
         tileMapVisualizer.Clear();
         tileMapVisualizer.PaintFloorTiles(floorPositions);
         WallGenerator.CreateWalls(floorPositions, tileMapVisualizer);
     }
 
-    protected HashSet<Vector2Int> RunRandomWalk(SimpleRandomWalkData parameters, Vector2Int pos) {
+    protected HashSet<Vector2Int> RunRandomWalk(FloorConfig parameters, Vector2Int pos) {
         var currentPos = pos;
         HashSet<Vector2Int> floorPositions = new HashSet<Vector2Int>();
         for (int i = 0; i < parameters.iterations; i++) {

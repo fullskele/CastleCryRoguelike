@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
 
+    //room properties
     [SerializeField]
     private int minRoomWidth = 4, minRoomHeight = 4;
     [SerializeField]
@@ -16,16 +17,20 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
     [SerializeField]
     private bool randomWalkRooms = false;
 
+    //enemy properties
     [SerializeField]
     public int enemySpawnLimit = 4;
     [SerializeField]
     public int enemiesRemaining;
     [SerializeField]
     private GameObject player;
+    [SerializeField]
+    private List<Enemy> enemySpawnList;
 
     //TODO: make this a table of enemyprefabs, minfloorlevel, spawnchance
-    [SerializeField]
-    private GameObject enemyToSpawn;
+    
+    //[SerializeField]
+    //private GameObject enemyToSpawn;
 
     public void UpdateEnemyCount(int change) {
         //if percent of enemies left is less than 10%, make new level
@@ -108,19 +113,47 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
         while (enemySpawnCount > 0) {
             Vector2 randomTile = floorTiles[Random.Range(0, floorTiles.Count - 1)];
             Vector2 randomPos = new Vector2((float)(randomTile.x+.5), (float)(randomTile.y+.5));
-            Instantiate(enemyToSpawn, randomPos, Quaternion.identity);
+            Instantiate(RollForEnemy(), randomPos, Quaternion.identity);
             //prevent duplicate locations
             floorTiles.Remove(randomPos);
             enemySpawnCount -= 1;
         }
     }
 
+    private Enemy RollForEnemy() {
+        //pick from 1-100, add all enemies with that number or higher as their spawnchance, then chooses the rarest to return
+        int randomChance = Random.Range(1, 101);
+        List<EnemySpawnData> possibleEnemies = new List<EnemySpawnData>();
+        for (int i = 0; i < config.enemySpawnDataList.Count; i++) {
+            if (randomChance <= config.enemySpawnDataList[i].spawnChance) {
+                possibleEnemies.Add(config.enemySpawnDataList[i]);
+            }
+        }
+        if (possibleEnemies.Count > 0) {
+            //find rarest of all rolled enemies
+            Enemy chosenEnemy = GetRarestEnemy(possibleEnemies);
+            return chosenEnemy;
+        }
+        return null;
+    }
+
+    private Enemy GetRarestEnemy(List<EnemySpawnData> enemyList) {
+        int rarestChance = 101;
+        int rarestIndex = 404;
+        for (int i = 0; i < enemyList.Count; i++) {
+            if (config.enemySpawnDataList[i].spawnChance < rarestChance) {
+                rarestChance = config.enemySpawnDataList[i].spawnChance;
+                rarestIndex = i;
+            }
+        }
+        return config.enemySpawnDataList[rarestIndex].enemyPrefab;
+    }
     private HashSet<Vector2Int> CreateRoomsRandomly(List<BoundsInt> roomsList) {
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
         for (int i = 0; i < roomsList.Count; i++) {
             var roomBounds = roomsList[i];
             var roomCenter = new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
-            var roomFloor = RunRandomWalk(randomWalkParams, roomCenter);
+            var roomFloor = RunRandomWalk(config, roomCenter);
             foreach (var pos in roomFloor) {
                 if (pos.x >= (roomBounds.xMin + offset) && pos.x <= (roomBounds.xMax - offset) 
                     && pos.y >= (roomBounds.yMin - offset) && pos.y <= (roomBounds.yMax - offset)) {

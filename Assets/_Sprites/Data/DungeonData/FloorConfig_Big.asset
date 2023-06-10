@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 193ba9188dc1f06428962f0d24a55f25, type: 3}
-  m_Name: SimpleRandomWalkParams_Big
+  m_Name: FloorConfig_Big
   m_EditorClassIdentifier: 
   iterations: 100
   walkLength: 100

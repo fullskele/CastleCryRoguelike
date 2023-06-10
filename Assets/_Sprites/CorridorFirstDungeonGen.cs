@@ -98,7 +98,7 @@ public class CorridorFirstDungeonGen : SimpleRandomWalkDungeonGen {
     private void CreateRoomsAtDeadEnds(List<Vector2Int> deadEnds, HashSet<Vector2Int> roomFloors) {
         foreach (var pos in deadEnds) {
             if (!roomFloors.Contains(pos)) {
-                var room = RunRandomWalk(randomWalkParams, pos);
+                var room = RunRandomWalk(config, pos);
                 roomFloors.UnionWith(room);
             }
         }
@@ -126,7 +126,7 @@ public class CorridorFirstDungeonGen : SimpleRandomWalkDungeonGen {
         List<Vector2Int> roomsToCreate = potentialRoomPositions.OrderBy(x => Guid.NewGuid()).Take(roomsToCreateCount).ToList();
         
         foreach (var roomPos in roomsToCreate) {
-            var roomFloor = RunRandomWalk(randomWalkParams, roomPos);
+            var roomFloor = RunRandomWalk(config, roomPos);
             roomPositions.UnionWith(roomFloor);
         }
         return roomPositions;

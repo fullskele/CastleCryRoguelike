@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c481deb45d7cd7a48bf7b08b230b0a31, type: 3}
-  m_Name: SpawnTableEntry_Skeleton
+  m_Script: {fileID: 11500000, guid: 193ba9188dc1f06428962f0d24a55f25, type: 3}
+  m_Name: FloorConfig_Island1
   m_EditorClassIdentifier: 
-  spawnWeight: 100
-  enemyPrefab: {fileID: 8027095528075053629, guid: 59509d1befc20274b9bdb174a0c8a728, type: 3}
-  tags:
-  - basic
-  - undead
+  iterations: 100
+  walkLength: 20
+  startRandomEachIteration: 0
