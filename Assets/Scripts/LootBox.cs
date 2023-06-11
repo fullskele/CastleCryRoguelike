@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chest : Collectable {
+public class LootBox : Collectable {
     public Sprite emptyChest;
     public int pesosAmount = 5;
 
@@ -10,7 +10,6 @@ public class Chest : Collectable {
         if (!collected) {
 
             collected = true;
-            //only visual so far
             GetComponent<SpriteRenderer>().sprite = emptyChest;
             GameManager.instance.pesos += pesosAmount;
             //+X Pesos!

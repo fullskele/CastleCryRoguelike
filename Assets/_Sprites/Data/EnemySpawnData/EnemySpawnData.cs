@@ -6,4 +6,5 @@ using UnityEngine;
 public class EnemySpawnData : ScriptableObject {
     public Enemy enemyPrefab;
     public int spawnChance = 100;
+
 }

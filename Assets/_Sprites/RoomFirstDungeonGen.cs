@@ -19,23 +19,17 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
 
     //enemy properties
     [SerializeField]
-    public int enemySpawnLimit = 4;
-    [SerializeField]
     public int enemiesRemaining;
     [SerializeField]
     private GameObject player;
     [SerializeField]
     private List<Enemy> enemySpawnList;
-
-    //TODO: make this a table of enemyprefabs, minfloorlevel, spawnchance
     
-    //[SerializeField]
-    //private GameObject enemyToSpawn;
 
     public void UpdateEnemyCount(int change) {
         //if percent of enemies left is less than 10%, make new level
         enemiesRemaining += change;
-        if ((float)enemiesRemaining / (float)enemySpawnLimit <= .10) {
+        if ((float)enemiesRemaining / (float)config.enemySpawnCount <= .10) {
             RunProceduralGen();
         }
     }
@@ -57,8 +51,8 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
         var roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(new BoundsInt((Vector3Int)startPos, new Vector3Int
             (dungeonWidth, dungeonHeight, 0)), minRoomWidth, minRoomHeight);
 
+        //when this is true, enemies targetting the player will be deleted
         isGeneratingLevel = true;
-        isEnemyClearing = true;
 
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
 
@@ -86,23 +80,45 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
         foreach (Enemy enemy in enemies) {
             enemy.DeleteSelf();
         }
+        ClearEntitiesFromLevel();
 
-        spawnEnemies(tileMapVisualizer.FindAllFloorPositions(), enemySpawnLimit);
+        spawnEnemies(tileMapVisualizer.FindAllFloorPositions(), config.enemySpawnCount);
 
-        enemiesRemaining = enemySpawnLimit;
-        //this might not work long-term
+        enemiesRemaining = config.enemySpawnCount;
+        //this works for now
         HashSet<Vector2Int> allFloors = floor;
         allFloors.UnionWith(corridors);
+
+        spawnLoot(tileMapVisualizer.FindAllFloorPositions(), config.lootSpawnCount);
+
+        spawnSpecialTile(tileMapVisualizer.FindAllFloorPositions(), config.specialTileSpawnCount);
 
         //floor.UnionWith(corridors);
         WallGenerator.CreateWalls(allFloors, tileMapVisualizer);
 
-
-
-
-        //wait 1 frame for new enemies near player to delete themselves, then stop
+        //wait 1 frame for new enemies near player to delete themselves, then stop. Might be able to remove if level gen takes long enough
         StartCoroutine(StopGeneratingLevel());
     }
+
+    private void ClearEntitiesFromLevel() {
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        Collectable[] collectables = FindObjectsOfType<Collectable>();
+        //TODO
+        //SpecialTile[] specialTiles = FindObjectOfType<SpecialTile>();
+
+        foreach (Enemy enemy in enemies) {
+            enemy.DeleteSelf();
+        }
+        foreach (Collectable collectable in collectables) {
+            collectable.DeleteSelf();
+        }
+        /*
+        foreach (SpecialTile specialTile in specialTiles) {
+            specialTile.DeleteSelf();
+        }
+        */
+    }
+
     //TODO is this function necessary? Find way without 1f wait?
     IEnumerator StopGeneratingLevel() {
         yield return null;
@@ -113,41 +129,37 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
         while (enemySpawnCount > 0) {
             Vector2 randomTile = floorTiles[Random.Range(0, floorTiles.Count - 1)];
             Vector2 randomPos = new Vector2((float)(randomTile.x+.5), (float)(randomTile.y+.5));
-            Instantiate(RollForEnemy(), randomPos, Quaternion.identity);
+            Instantiate(config.RollForEnemy(), randomPos, Quaternion.identity);
             //prevent duplicate locations
             floorTiles.Remove(randomPos);
             enemySpawnCount -= 1;
         }
     }
 
-    private Enemy RollForEnemy() {
-        //pick from 1-100, add all enemies with that number or higher as their spawnchance, then chooses the rarest to return
-        int randomChance = Random.Range(1, 101);
-        List<EnemySpawnData> possibleEnemies = new List<EnemySpawnData>();
-        for (int i = 0; i < config.enemySpawnDataList.Count; i++) {
-            if (randomChance <= config.enemySpawnDataList[i].spawnChance) {
-                possibleEnemies.Add(config.enemySpawnDataList[i]);
-            }
+    
+    private void spawnLoot(List<Vector2> floorTiles, int lootSpawnCount) {
+        while (lootSpawnCount > 0) {
+            Vector2 randomTile = floorTiles[Random.Range(0, floorTiles.Count - 1)];
+            Vector2 randomPos = new Vector2((float)(randomTile.x + .5), (float)(randomTile.y + .5));
+            //TODO replace this with loottables
+            //Instantiate(config.RollForLoot, randomPos, Quaternion.identity);
+            //prevent duplicate locations
+            floorTiles.Remove(randomPos);
+            lootSpawnCount -= 1;
         }
-        if (possibleEnemies.Count > 0) {
-            //find rarest of all rolled enemies
-            Enemy chosenEnemy = GetRarestEnemy(possibleEnemies);
-            return chosenEnemy;
+    }
+    private void spawnSpecialTile(List<Vector2> floorTiles, int specialTileSpawnCount) {
+        while (specialTileSpawnCount > 0) {
+            Vector2 randomTile = floorTiles[Random.Range(0, floorTiles.Count - 1)];
+            Vector2 randomPos = new Vector2((float)(randomTile.x + .5), (float)(randomTile.y + .5));
+            //TODO replace this with specialTiletables
+            //Instantiate(config.RollForSpecialTile, randomPos, Quaternion.identity);
+            //prevent duplicate locations
+            floorTiles.Remove(randomPos);
+            specialTileSpawnCount -= 1;
         }
-        return null;
     }
 
-    private Enemy GetRarestEnemy(List<EnemySpawnData> enemyList) {
-        int rarestChance = 101;
-        int rarestIndex = 404;
-        for (int i = 0; i < enemyList.Count; i++) {
-            if (config.enemySpawnDataList[i].spawnChance < rarestChance) {
-                rarestChance = config.enemySpawnDataList[i].spawnChance;
-                rarestIndex = i;
-            }
-        }
-        return config.enemySpawnDataList[rarestIndex].enemyPrefab;
-    }
     private HashSet<Vector2Int> CreateRoomsRandomly(List<BoundsInt> roomsList) {
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
         for (int i = 0; i < roomsList.Count; i++) {

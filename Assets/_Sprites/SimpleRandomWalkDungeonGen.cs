@@ -11,8 +11,6 @@ public class SimpleRandomWalkDungeonGen : AbstractDungeonGen {
     [HideInInspector]
     public bool isGeneratingLevel;
     [HideInInspector]
-    public bool isEnemyClearing;
-    [HideInInspector]
 
     protected override void RunProceduralGen() {
         HashSet<Vector2Int> floorPositions = RunRandomWalk(config, startPos);
