@@ -15413,7 +15413,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2081360520369888685, guid: bb9c65a9c9bb2a94d8561a1002557358, type: 3}
       propertyPath: m_ExtrusionFactor
-      value: 0.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2081360520369888688, guid: bb9c65a9c9bb2a94d8561a1002557358, type: 3}
       propertyPath: m_Size.x
