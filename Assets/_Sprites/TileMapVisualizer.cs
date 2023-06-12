@@ -15,10 +15,8 @@ public class TileMapVisualizer : MonoBehaviour {
         wallDiagonalCornerDownLeft, wallDiagonalCornerDownRight, wallDiagonalCornerUpLeft, wallDiagonalCornerUpRight;
 
 
-    //TODO
-    //span from 0 to x bounds and 0 to y bounds
-    //if not null, add coord to list of vector2 
-    //randomly pick from list and add enemy, then remove entry from list
+
+    //TODO: Create method that also includes hallway positions
     public List<Vector2> FindAllFloorPositions() {
         List<Vector2> floorPositions = new List<Vector2>();
         floorTilemap.CompressBounds();

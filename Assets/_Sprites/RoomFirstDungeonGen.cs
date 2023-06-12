@@ -83,15 +83,16 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
         ClearEntitiesFromLevel();
 
         spawnEnemies(tileMapVisualizer.FindAllFloorPositions(), config.enemySpawnCount);
-
         enemiesRemaining = config.enemySpawnCount;
+
+        spawnSpecialTiles(tileMapVisualizer.FindAllFloorPositions(), config.specialTileSpawnCount);
+
         //this works for now
         HashSet<Vector2Int> allFloors = floor;
         allFloors.UnionWith(corridors);
 
-        spawnLoot(tileMapVisualizer.FindAllFloorPositions(), config.lootSpawnCount);
+        spawnCollectables(tileMapVisualizer.FindAllFloorPositions(), config.collectableSpawnCount);
 
-        spawnSpecialTile(tileMapVisualizer.FindAllFloorPositions(), config.specialTileSpawnCount);
 
         //floor.UnionWith(corridors);
         WallGenerator.CreateWalls(allFloors, tileMapVisualizer);
@@ -103,8 +104,7 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
     private void ClearEntitiesFromLevel() {
         Enemy[] enemies = FindObjectsOfType<Enemy>();
         Collectable[] collectables = FindObjectsOfType<Collectable>();
-        //TODO
-        //SpecialTile[] specialTiles = FindObjectOfType<SpecialTile>();
+        SpecialTile[] specialTiles = FindObjectsOfType<SpecialTile>();
 
         foreach (Enemy enemy in enemies) {
             enemy.DeleteSelf();
@@ -112,11 +112,9 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
         foreach (Collectable collectable in collectables) {
             collectable.DeleteSelf();
         }
-        /*
         foreach (SpecialTile specialTile in specialTiles) {
             specialTile.DeleteSelf();
         }
-        */
     }
 
     //TODO is this function necessary? Find way without 1f wait?
@@ -137,23 +135,23 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
     }
 
     
-    private void spawnLoot(List<Vector2> floorTiles, int lootSpawnCount) {
+    private void spawnCollectables(List<Vector2> floorTiles, int lootSpawnCount) {
         while (lootSpawnCount > 0) {
             Vector2 randomTile = floorTiles[Random.Range(0, floorTiles.Count - 1)];
             Vector2 randomPos = new Vector2((float)(randomTile.x + .5), (float)(randomTile.y + .5));
-            //TODO replace this with loottables
-            //Instantiate(config.RollForLoot, randomPos, Quaternion.identity);
+            //TODO replace this with collectabletables
+            Instantiate(config.RollForCollectable(), randomPos, Quaternion.identity);
             //prevent duplicate locations
             floorTiles.Remove(randomPos);
             lootSpawnCount -= 1;
         }
     }
-    private void spawnSpecialTile(List<Vector2> floorTiles, int specialTileSpawnCount) {
+    private void spawnSpecialTiles(List<Vector2> floorTiles, int specialTileSpawnCount) {
         while (specialTileSpawnCount > 0) {
             Vector2 randomTile = floorTiles[Random.Range(0, floorTiles.Count - 1)];
             Vector2 randomPos = new Vector2((float)(randomTile.x + .5), (float)(randomTile.y + .5));
-            //TODO replace this with specialTiletables
-            //Instantiate(config.RollForSpecialTile, randomPos, Quaternion.identity);
+            //TODO: Implement at least one SpecialTile
+            //Instantiate(config.RollForSpecialTile(), randomPos, Quaternion.identity);
             //prevent duplicate locations
             floorTiles.Remove(randomPos);
             specialTileSpawnCount -= 1;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LootBox : Collectable {
+public class Chest : Collectable {
     public Sprite emptyChest;
     public int pesosAmount = 5;
 

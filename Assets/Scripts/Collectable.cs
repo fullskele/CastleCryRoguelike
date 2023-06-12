@@ -9,6 +9,9 @@ public class Collectable : Collidable {
 
     protected override void OnCollide(Collider2D coll) {
         if (coll.name == "Player_0") {
+            if (dungeonGen.isGeneratingLevel) {
+                DeleteSelf();
+            }
             OnCollect();
         }
     }

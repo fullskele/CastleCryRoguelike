@@ -7,6 +7,11 @@ public class Collidable : MonoBehaviour {
     public ContactFilter2D filter;
     private BoxCollider2D boxCollider;
     private Collider2D[] hits = new Collider2D[10];
+    public RoomFirstDungeonGen dungeonGen;
+
+    private void Awake() {
+        dungeonGen = GameObject.FindGameObjectWithTag("Generator").GetComponent<RoomFirstDungeonGen>();
+    }
 
     protected virtual void Start() {
         boxCollider = GetComponent<BoxCollider2D>();

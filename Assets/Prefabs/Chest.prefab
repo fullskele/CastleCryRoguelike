@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 163276443
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -239530137, guid: 795e65515b5113242b71b351ba3daf64, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -138,5 +138,6 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  dungeonGen: {fileID: 0}
   emptyChest: {fileID: 1071716996, guid: 795e65515b5113242b71b351ba3daf64, type: 3}
-  pesosAmount: 300
+  pesosAmount: 50
