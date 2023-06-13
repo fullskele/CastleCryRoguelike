@@ -17,7 +17,7 @@ public class TileMapVisualizer : MonoBehaviour {
 
 
     //TODO: Create method that also includes hallway positions
-    public List<Vector2> FindAllFloorPositions() {
+    public List<Vector2> FindFloorPositions() {
         List<Vector2> floorPositions = new List<Vector2>();
         floorTilemap.CompressBounds();
         var bounds = floorTilemap.cellBounds;
@@ -43,6 +43,39 @@ public class TileMapVisualizer : MonoBehaviour {
             }
         }
         return floorPositions;
+    }
+
+    public List<Vector2> FindFloorAndCorridorPositions() {
+        List<Vector2> corridorPositions = new List<Vector2>();
+        corridorTilemap.CompressBounds();
+        var bounds = corridorTilemap.cellBounds;
+
+        // loop over the bounds (from min to max) on both axes
+        for (int x = bounds.min.x; x < bounds.max.x; x++) {
+            for (int y = bounds.min.y; y < bounds.max.y; y++) {
+                var cellPosition = new Vector3Int(x, y, 0);
+
+                // get the sprite and tile object at the specified location
+                var sprite = corridorTilemap.GetSprite(cellPosition);
+                var tile = corridorTilemap.GetTile(cellPosition);
+
+                // this is a sanity check that i've included to ensure we're only
+                // looking at populated tiles. you can change this up!
+                if (tile == null && sprite == null) {
+                    continue;
+                }
+
+                // add to list to return
+                //Debug.Log(x + ", " + y);
+                corridorPositions.Add(new Vector2(x, y));
+            }
+        }
+
+        List<Vector2> floorPositions = FindFloorPositions();
+        foreach (var pos in floorPositions) {
+            corridorPositions.Add(pos);
+        }
+        return corridorPositions;
     }
 
     //takes a generic collection of Vector2Int positions

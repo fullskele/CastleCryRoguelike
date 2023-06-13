@@ -15,3 +15,11 @@ MonoBehaviour:
   iterations: 100
   walkLength: 100
   startRandomEachIteration: 1
+  enemySpawnCount: 30
+  enemySpawnDataList: []
+  collectableSpawnCount: 5
+  collectableSpawnDataList:
+  - {fileID: 11400000, guid: 446e1f91cc24421438a8dfca1a966acb, type: 2}
+  specialTileSpawnCount: 20
+  specialTileSpawnDataList:
+  - {fileID: 0}

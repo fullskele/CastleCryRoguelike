@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpecialTile : Collectable {
+public class SpecialTile : Collidable {
 
-    protected float cooldown = 20f;
+    public float abilityCooldown = 10.0f;
+    protected float lastActivate;
 
-    protected override void OnCollect() {
-        collected = true;
-        //TODO: make collected become false after cooldown
+    protected override void Start() {
+        base.Start();
+        lastActivate = -abilityCooldown;
+    }
+
+    public void DeleteSelf() {
+        Destroy(gameObject);
     }
 }

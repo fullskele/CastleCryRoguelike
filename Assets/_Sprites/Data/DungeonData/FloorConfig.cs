@@ -87,7 +87,7 @@ public class FloorConfig : ScriptableObject {
 
 
 
-    public Collectable RollForSpecialTile() {
+    public SpecialTile RollForSpecialTile() {
         //pick from 1-100, add all specialTile with that number or higher as their spawnchance, then chooses the rarest to return
         int randomChance = Random.Range(1, 101);
         List<SpecialTileSpawnData> possibleSpecialTile = new List<SpecialTileSpawnData>();

@@ -82,16 +82,16 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
         }
         ClearEntitiesFromLevel();
 
-        spawnEnemies(tileMapVisualizer.FindAllFloorPositions(), config.enemySpawnCount);
+        spawnEnemies(tileMapVisualizer.FindFloorPositions(), config.enemySpawnCount);
         enemiesRemaining = config.enemySpawnCount;
 
-        spawnSpecialTiles(tileMapVisualizer.FindAllFloorPositions(), config.specialTileSpawnCount);
+        spawnSpecialTiles(tileMapVisualizer.FindFloorPositions(), config.specialTileSpawnCount);
 
         //this works for now
         HashSet<Vector2Int> allFloors = floor;
         allFloors.UnionWith(corridors);
 
-        spawnCollectables(tileMapVisualizer.FindAllFloorPositions(), config.collectableSpawnCount);
+        spawnCollectables(tileMapVisualizer.FindFloorAndCorridorPositions(), config.collectableSpawnCount);
 
 
         //floor.UnionWith(corridors);
@@ -150,8 +150,7 @@ public class RoomFirstDungeonGen : SimpleRandomWalkDungeonGen {
         while (specialTileSpawnCount > 0) {
             Vector2 randomTile = floorTiles[Random.Range(0, floorTiles.Count - 1)];
             Vector2 randomPos = new Vector2((float)(randomTile.x + .5), (float)(randomTile.y + .5));
-            //TODO: Implement at least one SpecialTile
-            //Instantiate(config.RollForSpecialTile(), randomPos, Quaternion.identity);
+            Instantiate(config.RollForSpecialTile(), randomPos, Quaternion.identity);
             //prevent duplicate locations
             floorTiles.Remove(randomPos);
             specialTileSpawnCount -= 1;
