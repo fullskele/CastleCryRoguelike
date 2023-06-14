@@ -47,13 +47,14 @@ public class Enemy : Mover {
             }
 
             if (chasing && !collidingWithPlayer) {
+                //TODO: Fix knockback
                 UpdateMotor((playerTransform.position - transform.position).normalized);
             } else if (!chasing) {
-                UpdateMotor(startingPosition - transform.position);
+                //UpdateMotor(startingPosition - transform.position);
             }
 
         } else {
-            UpdateMotor(startingPosition - transform.position);
+            //UpdateMotor(startingPosition - transform.position);
             chasing = false;
         }
 
