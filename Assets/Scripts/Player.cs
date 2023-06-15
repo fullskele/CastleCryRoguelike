@@ -1,33 +1,53 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class Player : Mover
-{
+public class Player : Mover {
     private SpriteRenderer spriteRenderer;
+
+    //logic
     private bool isAlive = true;
+
+    //controls
+    private Vector2 pointerInput, movementInput;
+    private AgentMover agentMover;
+    public Vector2 PointerInput => pointerInput;
+    [SerializeField]
+    private InputActionReference movement, attack, pointerPos;
+
+    private void OnEnable() {
+        attack.action.performed += PerformAttack;
+    }
+
+    private void OnDisable() {
+        attack.action.performed -= PerformAttack;
+    }
+
+    private void PerformAttack(InputAction.CallbackContext obj) {
+        throw new NotImplementedException();
+    }
 
     protected override void Start () {
         base.Start();
+        agentMover = GetComponent<AgentMover>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    protected override void ReceiveDamage(Damage dmg) {
+    private void Update() {
         if (!isAlive)
             return;
 
-        base.ReceiveDamage(dmg);
-        GameManager.instance.OnHitpointChange();
+        pointerInput = GetPointerInput();
+        movementInput = movement.action.ReadValue<Vector2>();
+        agentMover.MovementInput = movementInput;
     }
 
-    private void FixedUpdate() {
-        if (!isAlive)
-            return;
-
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
-
-        UpdateMotor(new Vector3(x, y, 0).normalized);
+    private Vector2 GetPointerInput () {
+        Vector3 mousePos = pointerPos.action.ReadValue<Vector2>();
+        mousePos.z = Camera.main.nearClipPlane;
+        return Camera.main.ScreenToWorldPoint(mousePos);
     }
 
     public void SwapSprite(int skinID) {
@@ -41,6 +61,13 @@ public class Player : Mover
         for (int i = 0; i < level; i++) {
             OnLevelUp();
         }
+    }
+    protected override void ReceiveDamage(Damage dmg) {
+        if (!isAlive)
+            return;
+
+        base.ReceiveDamage(dmg);
+        GameManager.instance.OnHitpointChange();
     }
     public void Heal(int healingAmount) {
         if (hitpoint == maxHitpoint)
