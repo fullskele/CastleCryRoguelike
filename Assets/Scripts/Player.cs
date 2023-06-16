@@ -17,6 +17,26 @@ public class Player : Mover {
     [SerializeField]
     private InputActionReference movement, attack, pointerPos;
 
+    private WeaponParent weaponParent;
+
+
+    protected override void Start () {
+        base.Start();
+        weaponParent = GetComponentInChildren<WeaponParent>();
+        agentMover = GetComponent<AgentMover>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private void Update() {
+        if (!isAlive)
+            return;
+
+        weaponParent.pointerPos = pointerInput;
+        pointerInput = GetPointerInput();
+        movementInput = movement.action.ReadValue<Vector2>();
+        agentMover.MovementInput = movementInput;
+    }
+
     private void OnEnable() {
         attack.action.performed += PerformAttack;
     }
@@ -26,22 +46,8 @@ public class Player : Mover {
     }
 
     private void PerformAttack(InputAction.CallbackContext obj) {
-        throw new NotImplementedException();
-    }
-
-    protected override void Start () {
-        base.Start();
-        agentMover = GetComponent<AgentMover>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    private void Update() {
-        if (!isAlive)
-            return;
-
-        pointerInput = GetPointerInput();
-        movementInput = movement.action.ReadValue<Vector2>();
-        agentMover.MovementInput = movementInput;
+        weaponParent.Attack();
+        
     }
 
     private Vector2 GetPointerInput () {
