@@ -14,6 +14,11 @@ public class WeaponParent : MonoBehaviour {
 
     public bool IsAttacking { get; private set; }
 
+    [SerializeField]
+    private Transform circleOrigin;
+    [SerializeField]
+    private float radius;
+
     public void ResetIsAttacking() {
         IsAttacking = false;
     }
@@ -52,5 +57,22 @@ public class WeaponParent : MonoBehaviour {
     private IEnumerator DelayAttack() {
         yield return new WaitForSeconds(delay);
         attackBlocked = false;
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.blue;
+        Vector3 pos = circleOrigin == null ? Vector3.zero : circleOrigin.position;
+        Gizmos.DrawWireSphere(pos, radius);
+    }
+
+    public void DetectColliders() {
+        foreach (Collider2D collider in Physics2D.OverlapCircleAll(circleOrigin.position, radius)) {
+            //Debug.Log(collider.name);
+            Health health;
+            //checking for component before proceding
+            if (health = collider.GetComponent<Health>()) {
+                health.GetHit(1, transform.parent.gameObject);
+            }
+        }
     }
 }

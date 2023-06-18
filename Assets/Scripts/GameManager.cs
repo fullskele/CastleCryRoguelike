@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         SceneManager.sceneLoaded -= LoadState;
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //SceneManager.sceneLoaded += OnSceneLoaded;
 
         //SceneManager.sceneLoaded += LoadState;
     }
@@ -120,11 +120,12 @@ public class GameManager : MonoBehaviour
         player.OnLevelUp();
     }
 
-    // On scene load
+    // Runs the following at scene load / game start
+    /*
     public void OnSceneLoaded(Scene s, LoadSceneMode mode) {
         player.transform.position = GameObject.Find("SpawnPoint").transform.position;
     }
-
+    */
     public void Respawn() {
         deathMenuAnimator.SetTrigger("Hide");
         UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
