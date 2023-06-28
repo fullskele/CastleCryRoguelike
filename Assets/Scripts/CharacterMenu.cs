@@ -39,20 +39,20 @@ public class CharacterMenu : MonoBehaviour {
 
     //weapon upgrading
     public void OnUpgradeClick() {
-        if (GameManager.instance.tryUpgradeWeapon())
+        //if (GameManager.instance.tryUpgradeWeapon())
             updateMenu();
     }
 
     //update character info (on menu button click)
     public void updateMenu() {
         // Weapon
-        weaponSprite.sprite = GameManager.instance.weaponSprites[GameManager.instance.weapon.weaponLevel];
+        //weaponSprite.sprite = GameManager.instance.weaponSprites[GameManager.instance.weapon.weaponLevel];
         
-        if (GameManager.instance.weapon.weaponLevel == GameManager.instance.weaponPrices.Count) {
-            upgradeCostText.text = "MAX";
-        } else {
-            upgradeCostText.text = GameManager.instance.weaponPrices[GameManager.instance.weapon.weaponLevel].ToString();
-        }
+        //if (GameManager.instance.weapon.weaponLevel == GameManager.instance.weaponPrices.Count) {
+        //    upgradeCostText.text = "MAX";
+        //} else {
+        //    upgradeCostText.text = GameManager.instance.weaponPrices[GameManager.instance.weapon.weaponLevel].ToString();
+        //}
 
 
         //Meta

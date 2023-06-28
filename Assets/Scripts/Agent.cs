@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : Mover {
+public class Agent : Mover {
     private SpriteRenderer spriteRenderer;
 
     //logic
@@ -13,12 +13,12 @@ public class Player : Mover {
     //controls
     private Vector2 pointerInput, movementInput;
     private AgentMover agentMover;
-    public Vector2 PointerInput => pointerInput;
-    [SerializeField]
-    private InputActionReference movement, attack, pointerPos;
+
 
     private WeaponParent weaponParent;
 
+    public Vector2 PointerInput { get => pointerInput; set => pointerInput = value; }
+    public Vector2 MovementInput { get => movementInput; set => movementInput = value; }
 
     protected override void Start () {
         base.Start();
@@ -31,30 +31,18 @@ public class Player : Mover {
         if (!isAlive)
             return;
 
-        weaponParent.pointerPos = pointerInput;
-        pointerInput = GetPointerInput();
-        movementInput = movement.action.ReadValue<Vector2>();
+        //pointerInput = GetPointerInput();
+        //movementInput = movement.action.ReadValue<Vector2>().normalized;
+
         agentMover.MovementInput = movementInput;
+        weaponParent.pointerPos = pointerInput;
     }
 
-    private void OnEnable() {
-        attack.action.performed += PerformAttack;
-    }
-
-    private void OnDisable() {
-        attack.action.performed -= PerformAttack;
-    }
-
-    private void PerformAttack(InputAction.CallbackContext obj) {
+    public void PerformAttack() {
         weaponParent.Attack();
         
     }
 
-    private Vector2 GetPointerInput () {
-        Vector3 mousePos = pointerPos.action.ReadValue<Vector2>();
-        mousePos.z = Camera.main.nearClipPlane;
-        return Camera.main.ScreenToWorldPoint(mousePos);
-    }
 
     public void SwapSprite(int skinID) {
         spriteRenderer.sprite = GameManager.instance.playerSprites[skinID];

@@ -37,8 +37,8 @@ public class GameManager : MonoBehaviour
     public List<int> xpTable;
 
     //references
-    public Player player;
-    public Weapon weapon;
+    public Agent player;
+    //public Weapon weapon;
     public FloatingTextManager floatingTextManager;
     public RectTransform hitpointBar;
     public Animator deathMenuAnimator;
@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
         floatingTextManager.Show(msg, fontSize, color, position, motion, duration);
     }
 
+    /*
     //Upgrade weapon
     public bool tryUpgradeWeapon() {
         //is weapon level maxed?
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour
 
         return false;
     }
+    */
 
     //Hitpoint bar
     public void OnHitpointChange() {
@@ -145,7 +147,7 @@ public class GameManager : MonoBehaviour
         s += "0" + "|";
         s += pesos.ToString() + "|";
         s += experience.ToString() + "|";
-        s += weapon.weaponLevel.ToString();
+        //s += weapon.weaponLevel.ToString();
      
         PlayerPrefs.SetString("SaveState", s);
     }
@@ -163,6 +165,6 @@ public class GameManager : MonoBehaviour
         pesos = int.Parse(data[1]);
         experience = int.Parse(data[2]);
         player.SetLevel(GetCurrentLevel());
-        weapon.SetWeaponLevel(int.Parse(data[3]));
+        //weapon.SetWeaponLevel(int.Parse(data[3]));
     }
 } 
