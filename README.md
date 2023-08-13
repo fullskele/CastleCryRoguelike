@@ -13,6 +13,6 @@ Current features include:
 
 -Menus to handle gameover, upgrading, and viewing of the aforementioned player stats
 
--tileset, treasure, and enemy spawn 'pools' explicitly designed for easy expansion
+-tileset, treasure, special tile, and enemy spawn 'pools' explicitly designed for easy expansion
 
 -(WIP) pathfinding AI for enemies
